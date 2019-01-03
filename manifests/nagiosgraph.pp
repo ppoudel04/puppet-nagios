@@ -11,6 +11,7 @@ class nagios::nagiosgraph (
   $apache_httpd_conf_content = undef,
   $apache_httpd_conf_source  = undef,
   $apache_httpd_conf_file    = '/etc/httpd/conf.d/nagiosgraph.conf',
+  $apache_allowed_from       = $::nagios::server::apache_allowed_from,
   # Used in the nagiosgraph.conf template
   $perflog     = '/var/log/nagios/service_perfdata.log',
   $plotasarea  = 'idle,data;system,data;user,data;nice,data',
@@ -23,13 +24,6 @@ class nagios::nagiosgraph (
   $ssi     = false,
   $gif     = false
 ) {
-
-  # Get the same value as the server (hack-ish, used in the default template)
-  if ! $::nagios::server::apache_allowed_from.empty {
-    $apache_allowed_from = $::nagios::server::apache_allowed_from
-  } else {
-    $apache_allowed_from = []
-  }
 
   # Set a default content template if no content/source is specified
   if $apache_httpd_conf_source == undef {
