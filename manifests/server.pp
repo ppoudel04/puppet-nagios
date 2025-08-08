@@ -98,7 +98,7 @@ class nagios::server (
   $plugin_slack_webhook  = undef,
   $plugin_redis          = false,
   $plugin_redis_sentinel = false,
-  $selinux               = $::selinux,
+  $selinux               = $facts['os']['selinux']['enabled'],
   $check_for_updates     = true,
   # Original template entries
   $template_generic_contact = {},
@@ -1213,8 +1213,8 @@ class nagios::server (
 
   # With selinux, adjustements are needed for nagiosgraph
   # lint:ignore:quoted_booleans
-  if ( ( $selinux == true and $::selinux_enforced == true ) or
-  ( $selinux == 'true' and $::selinux_enforced == 'true' ) ) {
+  if ( ( $selinux == true and $facts['os']['selinux']['enforced'] == true ) or
+  ( $selinux == 'true' and $facts['os']['selinux']['enforced'] == 'true' ) ) {
     selinux::audit2allow { 'nagios':
       source => "puppet:///modules/${module_name}/messages.nagios",
     }
