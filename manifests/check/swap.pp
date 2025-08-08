@@ -1,6 +1,6 @@
 class nagios::check::swap (
   $ensure                   = undef,
-  $args                     = undef,
+  $args                     = '',
   $check_title              = $::nagios::client::host_name,
   $servicegroups            = undef,
   $check_period             = $::nagios::client::service_check_period,
@@ -9,15 +9,15 @@ class nagios::check::swap (
   $max_check_attempts       = $::nagios::client::service_max_check_attempts,
   $notification_period      = $::nagios::client::service_notification_period,
   $use                      = $::nagios::client::service_use,
-) inherits nagios::client {
+) inherits ::nagios::client {
 
   if $ensure != 'absent' {
     Package <| tag == 'nagios-plugins-swap' |>
   }
 
   # Include default arguments if no overrides in $args
-  if $args !~ /-w/ { $arg_w = '-w 5% ' } else { $arg_w = undef }
-  if $args !~ /-c/ { $arg_c = '-c 2% ' } else { $arg_c = undef }
+  if $args !~ /-w/ { $arg_w = '-w 5% ' } else { $arg_w = '' }
+  if $args !~ /-c/ { $arg_c = '-c 2% ' } else { $arg_c = '' }
   $fullargs = strip("${arg_w}${arg_c}${args}")
 
   nagios::client::nrpe_file { 'check_swap':

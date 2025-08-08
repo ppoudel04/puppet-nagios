@@ -1,6 +1,6 @@
 class nagios::check::megaraid_sas (
   $ensure                   = undef,
-  $args                     = undef,
+  $args                     = '',
   $package                  = 'megacli',
   $megaclibin               = $::nagios::params::megaclibin,
   $check_title              = $::nagios::client::host_name,

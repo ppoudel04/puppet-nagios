@@ -1,6 +1,6 @@
 class nagios::check::nginx (
   $ensure                   = undef,
-  $args                     = $facts['nagios_check_nginx_args'],
+  $args                     = $::nagios_check_nginx_args,
   $check_title              = $::nagios::client::host_name,
   $servicegroups            = undef,
   $check_period             = $::nagios::client::service_check_period,
@@ -9,7 +9,7 @@ class nagios::check::nginx (
   $max_check_attempts       = $::nagios::client::service_max_check_attempts,
   $notification_period      = $::nagios::client::service_notification_period,
   $use                      = $::nagios::client::service_use,
-) inherits nagios::client {
+) inherits ::nagios::client {
 
   # Needs "plugin_nginx => true" on nagios::server to get the check script
 

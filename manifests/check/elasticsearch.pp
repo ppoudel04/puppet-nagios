@@ -1,16 +1,16 @@
 class nagios::check::elasticsearch (
-  $args                     = undef,
+  $args                     = '',
   $host                     = undef,
   $port                     = undef,
   $node                     = undef,
   $modes_enabled            = [],
   $modes_disabled           = [],
   # Modes
-  $args_cluster_status      = undef,
-  $args_jvm_usage           = undef,
-  $args_nodes               = undef,
-  $args_split_brain         = undef,
-  $args_unassigned_shards   = undef,
+  $args_cluster_status      = '',
+  $args_jvm_usage           = '',
+  $args_nodes               = '',
+  $args_split_brain         = '',
+  $args_unassigned_shards   = '',
   $check_title              = $::nagios::client::host_name,
   $check_period             = $::nagios::client::service_check_period,
   $contact_groups           = $::nagios::client::service_contact_groups,
@@ -25,17 +25,17 @@ class nagios::check::elasticsearch (
   if $args !~ /-H/ and $host != undef {
     $arg_h = "-H ${host} "
   } else {
-    $arg_h = undef
+    $arg_h = ''
   }
   if $args !~ /-P/ and $port != undef {
     $arg_p = "-P ${port} "
   } else {
-    $arg_p = undef
+    $arg_p = ''
   }
   if $args !~ /-N/ and $node != undef {
     $arg_n = "-N ${node} "
   } else {
-    $arg_n = undef
+    $arg_n = ''
   }
   $globalargs = strip("${arg_h}${arg_p}${arg_n}${args}")
 
@@ -49,7 +49,7 @@ class nagios::check::elasticsearch (
 
   $check_modes = prefix($modes,'check_es_')
   nagios::client::nrpe_plugin { $check_modes:
-    ensure => $ensure,
+    ensure  => $ensure,
   }
 
   realize Nagios::Client::Nrpe_plugin['nagioscheck.py']

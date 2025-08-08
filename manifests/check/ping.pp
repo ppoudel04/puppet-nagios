@@ -1,6 +1,6 @@
 class nagios::check::ping (
   $ensure                   = undef,
-  $args                     = undef,
+  $args                     = '',
   $check_title              = $::nagios::client::host_name,
   $servicegroups            = undef,
   $check_period             = $::nagios::client::service_check_period,
@@ -9,12 +9,12 @@ class nagios::check::ping (
   $max_check_attempts       = $::nagios::client::service_max_check_attempts,
   $notification_period      = $::nagios::client::service_notification_period,
   $use                      = $::nagios::client::service_use,
-) inherits nagios::client {
+) inherits ::nagios::client {
 
   # Include defaults if no overrides in $args
-  if $args !~ /-w/ { $arg_w = '-w 2000,50% ' }   else { $arg_w = undef }
-  if $args !~ /-c/ { $arg_c = '-c 5000,100% ' }  else { $arg_c = undef }
-  if $args !~ /-p/ { $arg_p = '-p 5 ' }          else { $arg_p = undef }
+  if $args !~ /-w/ { $arg_w = '-w 2000,50% ' }   else { $arg_w = '' }
+  if $args !~ /-c/ { $arg_c = '-c 5000,100% ' }  else { $arg_c = '' }
+  if $args !~ /-p/ { $arg_p = '-p 5 ' }          else { $arg_p = '' }
   $fullargs = strip("${arg_w}${arg_c}${arg_p}${args}")
 
   nagios::service { "check_ping_${check_title}":

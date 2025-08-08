@@ -29,17 +29,17 @@ define nagios::check::zookeeper::key () {
 
   if ( ( $keys_enabled == [] and $keys_disabled_final == [] ) or
     ( $keys_enabled != [] and $key in $keys_enabled ) or
-  ( $keys_disabled_final != [] and ! ( $key in $keys_disabled_final ) ) )
+    ( $keys_disabled_final != [] and ! ( $key in $keys_disabled_final ) ) )
   {
     nagios::client::nrpe_file { "check_${key}":
-      ensure => $ensure,
-      plugin => $plugin,
-      args   => "${args} --output=nagios --key=${title} ${args_key}",
+      ensure    => $ensure,
+      plugin    => $plugin,
+      args      => "${args} --output=nagios --key=${title} ${args_key}",
     }
     nagios::service { "check_${key}_${check_title}":
       ensure              => $ensure,
       check_command       => "check_nrpe_${key}",
-      service_description => $key,
+      service_description => "${key}",
       servicegroups       => 'zookeeper',
     }
   } else {

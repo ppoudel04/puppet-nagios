@@ -1,16 +1,16 @@
 define nagios::check::elasticsearch::mode (
-  $ensure,
-  $globalargs,
-  $modes_enabled,
-  $modes_disabled,
-  $servicegroups,
-  $check_title,
-  $check_period,
-  $contact_groups,
-  $first_notification_delay,
-  $max_check_attempts,
-  $notification_period,
-  $use,
+    $ensure,
+    $globalargs,
+    $modes_enabled,
+    $modes_disabled,
+    $servicegroups,
+    $check_title,
+    $check_period,
+    $contact_groups,
+    $first_notification_delay,
+    $max_check_attempts,
+    $notification_period,
+    $use,
 ) {
   $mode = $title
   if $ensure == 'absent' or

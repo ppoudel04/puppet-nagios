@@ -1,6 +1,6 @@
 class nagios::check::kafka (
   $ensure                   = undef,
-  $args                     = undef,
+  $args                     = '',
   $topic                    = undef,
   $brokers                  = undef,
   $package                  = [ 'python-harisekhon-utils', 'python-kafka' ],
@@ -17,13 +17,13 @@ class nagios::check::kafka (
   if $args !~ /-T/ and $args !~ /--topic/ and $topic != undef {
     $arg_t = "-T ${topic} "
   } else {
-    $arg_t = undef
+    $arg_t = ''
   }
   if $args !~ /-B/ and $args !~ /--brokers/ and $brokers != undef {
     $brokers_final = join($brokers, ',')
     $arg_b = "-B ${brokers_final} "
   } else {
-    $arg_b = undef
+    $arg_b = ''
   }
   $globalargs = strip("${arg_t}${arg_b}${args}")
 

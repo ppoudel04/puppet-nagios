@@ -21,13 +21,13 @@ class nagios::check::zookeeper (
 
   # Generic overrides
   if $check_period {
-    Nagios_service { check_period => $facts['nagios_check_zookeeper_period'] }
+    Nagios_service { check_period => $::nagios_check_zookeeper_period }
   }
   if $first_notification_delay {
-    Nagios_service { first_notification_delay => $facts['nagios_check_zookeeper_first_notification_delay'] }
+    Nagios_service { first_notification_delay => $::nagios_check_zookeeper_first_notification_delay }
   }
   if $notification_period {
-    Nagios_service { notification_period => $facts['nagios_check_zookeeper_notification_period'] }
+    Nagios_service { notification_period => $::nagios_check_zookeeper_notification_period }
   }
 
   # Optional package containing the script
@@ -42,13 +42,13 @@ class nagios::check::zookeeper (
 
   # Modes-specific definition
   nagios::check::zookeeper::key { [
-      'zk_avg_latency',
-      'zk_max_latency',
-      'zk_outstanding_requests',
-      'zk_open_file_descriptor_count',
-      'zk_pending_syncs',
-      'zk_followers',
-    ]:
+    'zk_avg_latency',
+    'zk_max_latency',
+    'zk_outstanding_requests',
+    'zk_open_file_descriptor_count',
+    'zk_pending_syncs',
+    'zk_followers',
+  ]:
   }
 
 }

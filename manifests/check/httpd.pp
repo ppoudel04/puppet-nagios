@@ -9,7 +9,7 @@ class nagios::check::httpd (
   $max_check_attempts       = $::nagios::client::service_max_check_attempts,
   $notification_period      = $::nagios::client::service_notification_period,
   $use                      = $::nagios::client::service_use,
-) inherits nagios::client {
+) inherits ::nagios::client {
 
   nagios::service { "check_httpd_${check_title}":
     ensure                   => $ensure,

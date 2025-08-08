@@ -20,7 +20,7 @@ define nagios::check::clickhouse::mode () {
 
   if ( ( $modes_enabled == [] and $modes_disabled == [] ) or
     ( $modes_enabled != [] and $mode in $modes_enabled ) or
-  ( $modes_disabled != [] and ! ( $mode in $modes_disabled ) ) )
+    ( $modes_disabled != [] and ! ( $mode in $modes_disabled ) ) )
   {
     nagios::client::nrpe_file { "check_clickhouse_${mode}":
       ensure => $ensure,

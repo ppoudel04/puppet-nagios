@@ -53,13 +53,13 @@ class nagios::client (
   $services                         = {},
   $nrpe_files                       = {},
   $nrpe_plugins                     = {},
-) inherits nagios::params {
+) inherits ::nagios::params {
 
   # Set the variables to be used, including scoped from elsewhere, based on
   # the optional fact or parameter from here
   $host_name = $nagios_host_name ? {
-    ''      => $facts['networking']['fqdn'],
-    undef   => $facts['networking']['fqdn'],
+    ''      => $::fqdn,
+    undef   => $::fqdn,
     default => $nagios_host_name,
   }
   $server = $nagios_server ? {
@@ -87,7 +87,7 @@ class nagios::client (
     group   => $nrpe_group,
     mode    => '0640',
     content => template('nagios/nrpe.cfg.erb'),
-    require => Package['nrpe'],
+    require => Package['nrpe']
   }
   # Included in the package, but we need to enable purging
   file { $nrpe_cfg_dir:
@@ -142,61 +142,61 @@ class nagios::client (
   # The check classes look up this scope's $service_* variables directly
   if $defaultchecks == true {
     # Always enabled ones (override $ensure to 'absent' to disable)
-    class { 'nagios::check::conntrack': }
-    class { 'nagios::check::cpu': }
-    class { 'nagios::check::disk': }
-    class { 'nagios::check::load': }
-    class { 'nagios::check::ntp_time': }
-    class { 'nagios::check::ping': }
-    class { 'nagios::check::ping6': }
-    class { 'nagios::check::ram': }
-    class { 'nagios::check::swap': }
+    class { '::nagios::check::conntrack': }
+    class { '::nagios::check::cpu': }
+    class { '::nagios::check::disk': }
+    class { '::nagios::check::load': }
+    class { '::nagios::check::ntp_time': }
+    class { '::nagios::check::ping': }
+    class { '::nagios::check::ping6': }
+    class { '::nagios::check::ram': }
+    class { '::nagios::check::swap': }
     # Conditional ones, once presence is detected using our custom facts
-    if getvar('::nagios_couchbase') {        class { 'nagios::check::couchbase': } }
-    if getvar('::nagios_pci_hpsa') {         class { 'nagios::check::hpsa': } }
-    if getvar('::nagios_httpd') {            class { 'nagios::check::httpd': } }
+    if getvar('::nagios_couchbase') {        class { '::nagios::check::couchbase': } }
+    if getvar('::nagios_pci_hpsa') {         class { '::nagios::check::hpsa': } }
+    if getvar('::nagios_httpd') {            class { '::nagios::check::httpd': } }
     if getvar('::nagios_pci_megaraid_sas') {
-      class { 'nagios::check::megaraid_sas': }
-      class { 'nagios::check::ssd': }
+      class { '::nagios::check::megaraid_sas': }
+      class { '::nagios::check::ssd': }
     }
-    if getvar('::nagios_memcached') {        class { 'nagios::check::memcached': } }
-    if getvar('::nagios_mongod') {           class { 'nagios::check::mongodb': } }
-    if getvar('::nagios_mountpoints') {      class { 'nagios::check::mountpoints': } }
-    if getvar('::nagios_moxi') {             class { 'nagios::check::moxi': } }
-    if getvar('::nagios_httpd_nginx') {      class { 'nagios::check::nginx': } }
-    if getvar('::nagios_pci_mptsas') {       class { 'nagios::check::mptsas': } }
+    if getvar('::nagios_memcached') {        class { '::nagios::check::memcached': } }
+    if getvar('::nagios_mongod') {           class { '::nagios::check::mongodb': } }
+    if getvar('::nagios_mountpoints') {      class { '::nagios::check::mountpoints': } }
+    if getvar('::nagios_moxi') {             class { '::nagios::check::moxi': } }
+    if getvar('::nagios_httpd_nginx') {      class { '::nagios::check::nginx': } }
+    if getvar('::nagios_pci_mptsas') {       class { '::nagios::check::mptsas': } }
     if getvar('::nagios_mysqld') {
-      case $facts['os']['name'] {
+      case $::operatingsystem {
         'RedHat', 'Fedora', 'CentOS', 'Scientific', 'Amazon': {
-          class { 'nagios::check::mysql_health': }
+          class { '::nagios::check::mysql_health': }
         }
         'Debian', 'Ubuntu': {
           # nagios-plugins-mysql_health doesn't exist for Trusty
           # https://launchpad.net/ubuntu/trusty/+search?text=nagios-plugins
         }
         default: {
-          class { 'nagios::check::mysql_health': }
+          class { '::nagios::check::mysql_health': }
         }
       }
     }
-    if getvar('::nagios_postgres') {  class { 'nagios::check::postgres': } }
-    if getvar('::nagios_mdraid') {    class { 'nagios::check::mdraid': } }
-    if getvar('::nagios_zookeeper') { class { 'nagios::check::zookeeper': } }
-    if getvar('::nagios_rabbitmq') {  class { 'nagios::check::rabbitmq': } }
+    if getvar('::nagios_postgres') {  class { '::nagios::check::postgres': } }
+    if getvar('::nagios_mdraid') {    class { '::nagios::check::mdraid': } }
+    if getvar('::nagios_zookeeper') { class { '::nagios::check::zookeeper': } }
+    if getvar('::nagios_rabbitmq') {  class { '::nagios::check::rabbitmq': } }
     if getvar('::nagios_redis') {
-      class { 'nagios::check::redis': }
-      class { 'nagios::check::redis_sentinel': }
+      class { '::nagios::check::redis': }
+      class { '::nagios::check::redis_sentinel': }
     }
     if getvar('::nagios_ipa_server') {
-      class { 'nagios::check::ipa': }
-      class { 'nagios::check::ipa_replication': }
-      class { 'nagios::check::krb5': }
+     class { '::nagios::check::ipa': }
+     class { '::nagios::check::ipa_replication': }
+     class { '::nagios::check::krb5': }
     }
 
-    if getvar('::virtual') == 'physical' {  class { 'nagios::check::cpu_temp': } }
-    if getvar('::nagios_elasticsearch') {  class { 'nagios::check::elasticsearch': } }
-    if getvar('::nagios_kafka') {  class { 'nagios::check::kafka': } }
-    if getvar('::nagios_clickhouse') {  class { 'nagios::check::clickhouse': } }
+    if getvar('::virtual') == 'physical' {  class { '::nagios::check::cpu_temp': } }
+    if getvar('::nagios_elasticsearch') {  class { '::nagios::check::elasticsearch': } }
+    if getvar('::nagios_kafka') {  class { '::nagios::check::kafka': } }
+    if getvar('::nagios_clickhouse') {  class { '::nagios::check::clickhouse': } }
   }
 
   # With selinux, some nrpe plugins require additional rules to work
@@ -228,7 +228,7 @@ class nagios::client (
     'nagioscheck.py',
   ]
   @nagios::client::nrpe_plugin { $nagios_nrpe_plugin:
-    ensure => 'present',
+    ensure  => 'present',
   }
 
 }

@@ -1,6 +1,6 @@
 class nagios::check::memcached (
   $ensure                   = undef,
-  $args                     = undef,
+  $args                     = '',
   $package                  = $::nagios::params::perl_memcached,
   $check_title              = $::nagios::client::host_name,
   $servicegroups            = undef,
@@ -10,7 +10,7 @@ class nagios::check::memcached (
   $max_check_attempts       = $::nagios::client::service_max_check_attempts,
   $notification_period      = $::nagios::client::service_notification_period,
   $use                      = $::nagios::client::service_use,
-) inherits nagios::client {
+) inherits ::nagios::client {
 
   nagios::client::nrpe_plugin { 'check_memcached':
     ensure  => $ensure,
@@ -18,9 +18,9 @@ class nagios::check::memcached (
   }
 
   # Include defaults if no overrides in $args
-  if $args !~ /(-H|-S)/ { $arg_h = '-H 127.0.0.1 ' } else { $arg_h = undef }
-  if $args !~ /(-p|-S)/ { $arg_p = '-p 11211 ' }     else { $arg_p = undef }
-  if $args !~ /-U/      { $arg_u = '-U 75,90 ' }     else { $arg_u = undef }
+  if $args !~ /(-H|-S)/ { $arg_h = '-H 127.0.0.1 ' } else { $arg_h = '' }
+  if $args !~ /(-p|-S)/ { $arg_p = '-p 11211 ' }     else { $arg_p = '' }
+  if $args !~ /-U/      { $arg_u = '-U 75,90 ' }     else { $arg_u = '' }
   $fullargs = strip("${arg_h}${arg_p}${arg_u}-f ${args}")
 
   nagios::client::nrpe_file { 'check_memcached':

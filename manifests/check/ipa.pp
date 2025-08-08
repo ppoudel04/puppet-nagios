@@ -1,6 +1,6 @@
 class nagios::check::ipa (
   $ensure                   = undef,
-  $args                     = undef,
+  $args                     = '',
   $check_title              = $::nagios::client::host_name,
   $servicegroups            = undef,
   $check_period             = $::nagios::client::service_check_period,

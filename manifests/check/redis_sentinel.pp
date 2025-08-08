@@ -1,7 +1,7 @@
 class nagios::check::redis_sentinel (
   $ensure                   = undef,
   $package                  = 'rubygem-redis',
-  $args                     = undef,
+  $args                     = '',
   $master                   = undef,
   $check_title              = $::nagios::client::host_name,
   $servicegroups            = 'redis',
@@ -11,18 +11,18 @@ class nagios::check::redis_sentinel (
   $max_check_attempts       = $::nagios::client::service_max_check_attempts,
   $notification_period      = $::nagios::client::service_notification_period,
   $use                      = $::nagios::client::service_use,
-) inherits nagios::client {
+) inherits ::nagios::client {
 
 
   if $ensure == 'absent' {
     $ensure_mode = 'absent'
-    $final_args = undef
+    $final_args = ''
   } else {
     $ensure_mode = 'present'
     if $args !~ /-m/ and $master != undef {
       $arg_m = "-m ${master}"
     } else {
-      $arg_m = '-m localhost'
+      $arg_m = "-m localhost"
       notify{'redis_sentinel monitorization check requires master parameter':}
     }
 
@@ -30,8 +30,8 @@ class nagios::check::redis_sentinel (
   }
 
   nagios::client::nrpe_file { 'check_sentinel_master_health':
-    ensure => $ensure_mode,
-    args   => $final_args,
+    ensure  => $ensure_mode,
+    args    => $final_args,
   }
 
   nagios::client::nrpe_plugin { 'check_sentinel_master_health':

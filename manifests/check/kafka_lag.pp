@@ -11,7 +11,7 @@ define nagios::check::kafka_lag (
 ) {
 
   if $ensure != 'absent' {
-    include 'nagios::plugin::kafka_lag'
+    include '::nagios::plugin::kafka_lag'
   }
 
   nagios::client::nrpe_file { "check_kafka_lag_${title}":

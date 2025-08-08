@@ -1,6 +1,6 @@
 class nagios::check::load (
   $ensure                   = undef,
-  $args                     = undef,
+  $args                     = '',
   $check_title              = $::nagios::client::host_name,
   $servicegroups            = undef,
   $check_period             = $::nagios::client::service_check_period,
@@ -9,7 +9,7 @@ class nagios::check::load (
   $max_check_attempts       = $::nagios::client::service_max_check_attempts,
   $notification_period      = $::nagios::client::service_notification_period,
   $use                      = $::nagios::client::service_use,
-) inherits nagios::client {
+) inherits ::nagios::client {
 
   if $ensure != 'absent' {
     Package <| tag == 'nagios-plugins-load' |>
@@ -17,11 +17,11 @@ class nagios::check::load (
 
   # We choose defaults based on the number of CPUs (cores)
   if $args == '' {
-    if $facts['processors']['count'] > 16 {
+    if $::processorcount > 16 {
       $final_args = '-w 60,40,40 -c 90,70,70'
-    } elsif $facts['processors']['count'] > 8 {
+    } elsif $::processorcount > 8 {
       $final_args = '-w 25,20,20 -c 40,35,35'
-    } elsif $facts['processors']['count'] > 4 {
+    } elsif $::processorcount > 4 {
       $final_args = '-w 20,15,15 -c 35,30,30'
     } else {
       $final_args = '-w 15,10,10 -c 30,25,25'
