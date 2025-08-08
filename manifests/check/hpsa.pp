@@ -1,6 +1,6 @@
 class nagios::check::hpsa (
   $ensure                   = undef,
-  $args                     = '',
+  $args                     = undef,
   $package                  = 'hpssacli',
   $check_title              = $::nagios::client::host_name,
   $servicegroups            = undef,
@@ -10,7 +10,7 @@ class nagios::check::hpsa (
   $max_check_attempts       = $::nagios::client::service_max_check_attempts,
   $notification_period      = $::nagios::client::service_notification_period,
   $use                      = $::nagios::client::service_use,
-) inherits ::nagios::client {
+) inherits nagios::client {
 
   nagios::client::nrpe_plugin { 'check_hpsa':
     ensure   => $ensure,

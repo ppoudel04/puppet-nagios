@@ -1,6 +1,6 @@
 class nagios::check::couchbase (
   $ensure                   = undef,
-  $args                     = '',
+  $args                     = undef,
   $couchbase_data_file_name = '/tmp/couchbase_data_file_name',
   $couchbase_cbstats        = '/opt/couchbase/bin/cbstats',
   $couchbase_host           = '127.0.0.1',
@@ -13,7 +13,7 @@ class nagios::check::couchbase (
   $max_check_attempts       = $::nagios::client::service_max_check_attempts,
   $notification_period      = $::nagios::client::service_notification_period,
   $use                      = $::nagios::client::service_use,
-) inherits ::nagios::client {
+) inherits nagios::client {
 
   nagios::client::nrpe_plugin { 'check_couchbase':
     ensure => $ensure,

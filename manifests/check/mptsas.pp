@@ -1,6 +1,6 @@
 class nagios::check::mptsas (
   $ensure                   = undef,
-  $args                     = '',
+  $args                     = undef,
   $package                  = 'lsiutil',
   $lsiutilbin               = '/usr/sbin/lsiutil',
   $check_title              = $::nagios::client::host_name,

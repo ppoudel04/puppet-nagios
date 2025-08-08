@@ -1,14 +1,14 @@
 define nagios::check::ping_addr (
-  $ensure                   = $::nagios_check_ping_addr_ensure,
+  $ensure                   = $facts['nagios_check_ping_addr_ensure'],
   $address                  = $::nagios::client::host_address,
   $warning                  = '2000.0,50%',
   $critical                 = '5000.0,100%',
-  $servicegroups            = $::nagios_check_ping_addr_servicegroups,
-  $check_period             = $::nagios_check_ping_addr_check_period,
+  $servicegroups            = $facts['nagios_check_ping_addr_servicegroups'],
+  $check_period             = $facts['nagios_check_ping_addr_check_period'],
   $contact_groups           = $::nagios::client::service_contact_groups,
   $first_notification_delay = $::nagios::client::service_first_notification_delay,
-  $max_check_attempts       = $::nagios_check_ping_addr_max_check_attempts,
-  $notification_period      = $::nagios_check_ping_addr_notification_period,
+  $max_check_attempts       = $facts['nagios_check_ping_addr_max_check_attempts'],
+  $notification_period      = $facts['nagios_check_ping_addr_notification_period'],
   $use                      = $::nagios::client::service_use,
 ) {
 

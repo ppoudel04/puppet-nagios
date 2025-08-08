@@ -1,6 +1,6 @@
 class nagios::check::mailq (
   $ensure                   = undef,
-  $args                     = '',
+  $args                     = undef,
   $check_title              = $::nagios::client::host_name,
   $servicegroups            = undef,
   $check_period             = $::nagios::client::service_check_period,
@@ -9,11 +9,11 @@ class nagios::check::mailq (
   $max_check_attempts       = $::nagios::client::service_max_check_attempts,
   $notification_period      = $::nagios::client::service_notification_period,
   $use                      = $::nagios::client::service_use,
-) inherits ::nagios::client {
+) inherits nagios::client {
 
   # Include defaults if no overrides in $args
-  if $args !~ /-w/ { $arg_w = '-w 5 ' } else { $arg_w = '' }
-  if $args !~ /-c/ { $arg_c = '-c 25 ' }  else { $arg_c = '' }
+  if $args !~ /-w/ { $arg_w = '-w 5 ' } else { $arg_w = undef }
+  if $args !~ /-c/ { $arg_c = '-c 25 ' }  else { $arg_c = undef }
   $fullargs = strip("${arg_w}${arg_c}${args}")
 
   if $ensure != 'absent' {

@@ -1,6 +1,6 @@
 class nagios::check::moxi (
   $ensure                   = undef,
-  $args                     = '',
+  $args                     = undef,
   $check_title              = $::nagios::client::host_name,
   $servicegroups            = undef,
   $check_period             = $::nagios::client::service_check_period,
@@ -9,7 +9,7 @@ class nagios::check::moxi (
   $max_check_attempts       = $::nagios::client::service_max_check_attempts,
   $notification_period      = $::nagios::client::service_notification_period,
   $use                      = $::nagios::client::service_use,
-) inherits ::nagios::client {
+) inherits nagios::client {
 
   # Required by the check script when a UNIX socket is used
   ensure_packages('socat')

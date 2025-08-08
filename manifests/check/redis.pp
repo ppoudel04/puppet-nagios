@@ -2,21 +2,21 @@ class nagios::check::redis (
   $ensure                       = undef,
   $package                      = 'perl-Redis',
   # common args for all modes 'as-is' for the check script
-  $args                         = '',
+  $args                         = undef,
   # common args for all modes as individual parameters
   $database                     = undef,
   $pass                         = undef,
   # modes selectively enabled and/or disabled
   $modes_enabled                = [],
   $modes_disabled               = [],
-  $args_blocked_clients         = '',
-  $args_connected_slaves        = '',
-  $args_connected_clients       = '',
-  $args_evicted_keys            = '',
-  $args_hitrate                 = '',
-  $args_response_time           = '',
-  $args_rejected_connections    = '',
-  $args_uptime_in_seconds       = '',
+  $args_blocked_clients         = undef,
+  $args_connected_slaves        = undef,
+  $args_connected_clients       = undef,
+  $args_evicted_keys            = undef,
+  $args_hitrate                 = undef,
+  $args_response_time           = undef,
+  $args_rejected_connections    = undef,
+  $args_uptime_in_seconds       = undef,
   # service
   $check_title              = $::nagios::client::host_name,
   $servicegroups            = 'redis',
@@ -37,12 +37,12 @@ class nagios::check::redis (
   if $args !~ /-d/ and $database != undef {
     $arg_d = "-d ${database} "
   } else {
-    $arg_d = ''
+    $arg_d = undef
   }
   if $args !~ /-x/ and $pass != undef {
     $arg_p = "-x ${pass} "
   } else {
-    $arg_p = ''
+    $arg_p = undef
   }
 
   $globalargs = strip("-H localhost ${arg_d}${arg_p}${args}")

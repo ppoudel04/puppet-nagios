@@ -2,7 +2,7 @@ class nagios::check::rabbitmq (
   $ensure                       = undef,
   $package                      = 'python-requests',
   # common args for all modes 'as-is' for the check script
-  $args                         = '',
+  $args                         = undef,
   # common args for all modes as individual parameters
   $user                         = undef,
   $pass                         = undef,
@@ -11,11 +11,11 @@ class nagios::check::rabbitmq (
   # modes selectively enabled and/or disabled
   $modes_enabled                = [],
   $modes_disabled               = [],
-  $args_connection_count        = '',
-  $args_queues_count            = '',
-  $args_mem_usage               = '',
-  $args_aliveness               = '',
-  $args_cluster_status          = '',
+  $args_connection_count        = undef,
+  $args_queues_count            = undef,
+  $args_mem_usage               = undef,
+  $args_aliveness               = undef,
+  $args_cluster_status          = undef,
   # service
   $check_title              = $::nagios::client::host_name,
   $servicegroups            = 'rabbitmq',
@@ -36,12 +36,12 @@ class nagios::check::rabbitmq (
   if $args !~ /-u/ and $user != undef {
     $arg_u = "-u ${user} "
   } else {
-    $arg_u = ''
+    $arg_u = undef
   }
   if $args !~ /-p/ and $pass != undef {
     $arg_p = "-p ${pass} "
   } else {
-    $arg_p = ''
+    $arg_p = undef
   }
   if $args !~ /-n/ and $nodename != undef {
     $arg_d = "-n ${nodename} "
@@ -52,7 +52,7 @@ class nagios::check::rabbitmq (
   if $args !~ /-v/ and $virtualhost != undef {
     $arg_c = "-v ${virtualhost} "
   } else {
-    $arg_c = ''
+    $arg_c = undef
   }
   $globalargs = strip("${arg_u}${arg_p}${arg_d}${arg_c}${args}")
 

@@ -1,6 +1,6 @@
 class nagios::check::ipa_replication (
   $ensure                   = undef,
-  $args                     = '',
+  $args                     = undef,
   $bind_dn                  = undef,
   $bind_pass                = undef,
   $ldap_uri                 = 'ldaps://localhost',
@@ -18,25 +18,25 @@ class nagios::check::ipa_replication (
   if $args !~ /-u/ and $ldap_uri != undef {
     $arg_u = "-u ${ldap_uri} "
   } else {
-    $arg_u = ''
+    $arg_u = undef
   }
   if $args !~ /-D/ and $bind_dn != undef {
     $arg_d = "-D ${bind_dn} "
   } else {
-    $arg_d = ''
+    $arg_d = undef
   }
   if $args !~ /-w/ and $bind_pass != undef {
     $arg_p = "-w ${bind_pass} "
   } else {
-    $arg_p = ''
+    $arg_p = undef
   }
 
   $globalargs = strip(" ${arg_u}${arg_d}${arg_p}${args}")
 
 
   nagios::client::nrpe_plugin { 'check_ipa_replication':
-    ensure   => $ensure,
-    package  => $package,
+    ensure  => $ensure,
+    package => $package,
   }
 
   nagios::client::nrpe_file { 'check_ipa_replication':

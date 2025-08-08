@@ -1,6 +1,6 @@
 class nagios::check::krb5 (
   $ensure                   = undef,
-  $args                     = '',
+  $args                     = undef,
   $keytab                   = undef,
   $principal                = undef,
   $port                     = undef,
@@ -19,31 +19,31 @@ class nagios::check::krb5 (
   if $args !~ /-r/ and $realm != undef {
     $arg_r = "-r ${realm} "
   } else {
-    $arg_r = ''
+    $arg_r = undef
   }
   if $args !~ /-p/ and $principal != undef {
     $arg_pr = "-p ${principal} "
   } else {
-    $arg_pr = ''
+    $arg_pr = undef
   }
   if $args !~ /-k/ and $keytab != undef {
     $arg_k = "-k ${keytab} "
   } else {
-    $arg_k = ''
+    $arg_k = undef
   }
   if $args !~ /-P/ and $port != undef {
     $arg_p = "-P ${port} "
   } else {
-    $arg_p = ''
+    $arg_p = undef
   }
 
   $globalargs = strip(" -H localhost ${arg_r}${arg_pr}${arg_p}${arg_k}${args}")
 
 
   nagios::client::nrpe_plugin { 'check_krb5':
-    ensure   => $ensure,
-    perl     => true,
-    package  => $package,
+    ensure  => $ensure,
+    perl    => true,
+    package => $package,
   }
 
   nagios::client::nrpe_file { 'check_krb5':

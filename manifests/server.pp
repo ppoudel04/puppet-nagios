@@ -98,7 +98,7 @@ class nagios::server (
   $plugin_slack_webhook  = undef,
   $plugin_redis          = false,
   $plugin_redis_sentinel = false,
-  $selinux               = $::selinux,
+  $selinux               = $facts['os']['selinux']['enabled'],
   $check_for_updates     = true,
   # Original template entries
   $template_generic_contact = {},
@@ -122,26 +122,26 @@ class nagios::server (
   # Escalation rules
   $hostescalation    = {},
   $serviceescalation = {},
-) inherits ::nagios::params {
+) inherits nagios::params {
 
   # Full nrpe command to run, with default options
   $nrpe = "${nrpe_command} ${nrpe_options}"
 
   # Plugin packages required on the server side
   package { [
-    'nagios',
-    'nagios-plugins-dhcp',
-    'nagios-plugins-dns',
-    'nagios-plugins-icmp',
-    'nagios-plugins-ldap',
-    'nagios-plugins-nrpe',
-    'nagios-plugins-ping',
-    'nagios-plugins-smtp',
-    'nagios-plugins-snmp',
-    'nagios-plugins-ssh',
-    'nagios-plugins-tcp',
-  ]:
-    ensure => installed,
+      'nagios',
+      'nagios-plugins-dhcp',
+      'nagios-plugins-dns',
+      'nagios-plugins-icmp',
+      'nagios-plugins-ldap',
+      'nagios-plugins-nrpe',
+      'nagios-plugins-ping',
+      'nagios-plugins-smtp',
+      'nagios-plugins-snmp',
+      'nagios-plugins-ssh',
+      'nagios-plugins-tcp',
+    ]:
+      ensure => installed,
   }
   # Plugin packages required on both the client and server sides
   Package <| tag == 'nagios-plugins-http' |>
@@ -234,7 +234,7 @@ class nagios::server (
   }
 
   if $apache_httpd {
-    class { '::apache_httpd':
+    class { 'apache_httpd':
       ssl       => $apache_httpd_ssl,
       modules   => $apache_httpd_modules,
       keepalive => 'On',
@@ -269,7 +269,7 @@ class nagios::server (
   }
 
   if $php {
-    class { '::php::mod_php5': }
+    class { 'php::mod_php5': }
     php::ini { '/etc/php.ini': }
     if $php_apc { php::module { $php_apc_module: } }
   }
@@ -406,43 +406,43 @@ class nagios::server (
 
   # Works great, but only if the "target" is the default (known limitation)
   resources { [
-    'nagios_command',
-    'nagios_contact',
-    'nagios_contactgroup',
-    'nagios_host',
-    'nagios_hostdependency',
-    'nagios_hostgroup',
-    'nagios_service',
-    'nagios_servicegroup',
-    'nagios_timeperiod',
-    'nagios_hostescalation',
-    'nagios_serviceescalation',
-  ]:
-    purge => true,
+      'nagios_command',
+      'nagios_contact',
+      'nagios_contactgroup',
+      'nagios_host',
+      'nagios_hostdependency',
+      'nagios_hostgroup',
+      'nagios_service',
+      'nagios_servicegroup',
+      'nagios_timeperiod',
+      'nagios_hostescalation',
+      'nagios_serviceescalation',
+    ]:
+      purge => true,
   }
 
   # Work around a puppet bug where created files are 600 root:root
   # Also, restart service after resources are purged
   file { [
-    '/etc/nagios/nagios_command.cfg',
-    '/etc/nagios/nagios_contact.cfg',
-    '/etc/nagios/nagios_contactgroup.cfg',
-    '/etc/nagios/nagios_host.cfg',
-    '/etc/nagios/nagios_hostdependency.cfg',
-    '/etc/nagios/nagios_hostgroup.cfg',
-    '/etc/nagios/nagios_service.cfg',
-    '/etc/nagios/nagios_servicedependency.cfg',
-    '/etc/nagios/nagios_servicegroup.cfg',
-    '/etc/nagios/nagios_timeperiod.cfg',
-    '/etc/nagios/nagios_hostescalation.cfg',
-    '/etc/nagios/nagios_serviceescalation.cfg',
-  ]:
-    ensure => 'present',
-    owner  => 'root',
-    group  => 'nagios',
-    mode   => '0640',
-    audit  => 'content',
-    notify => Service['nagios'],
+      '/etc/nagios/nagios_command.cfg',
+      '/etc/nagios/nagios_contact.cfg',
+      '/etc/nagios/nagios_contactgroup.cfg',
+      '/etc/nagios/nagios_host.cfg',
+      '/etc/nagios/nagios_hostdependency.cfg',
+      '/etc/nagios/nagios_hostgroup.cfg',
+      '/etc/nagios/nagios_service.cfg',
+      '/etc/nagios/nagios_servicedependency.cfg',
+      '/etc/nagios/nagios_servicegroup.cfg',
+      '/etc/nagios/nagios_timeperiod.cfg',
+      '/etc/nagios/nagios_hostescalation.cfg',
+      '/etc/nagios/nagios_serviceescalation.cfg',
+    ]:
+      ensure => 'present',
+      owner  => 'root',
+      group  => 'nagios',
+      mode   => '0640',
+      audit  => 'content',
+      notify => Service['nagios'],
   }
 
   # Nagios commands
@@ -1213,8 +1213,8 @@ class nagios::server (
 
   # With selinux, adjustements are needed for nagiosgraph
   # lint:ignore:quoted_booleans
-  if ( ( $selinux == true and $::selinux_enforced == true ) or
-  ( $selinux == 'true' and $::selinux_enforced == 'true' ) ) {
+  if ( ( $selinux == true and $facts['os']['selinux']['enforced'] == true ) or
+  ( $selinux == 'true' and $facts['os']['selinux']['enforced'] == 'true' ) ) {
     selinux::audit2allow { 'nagios':
       source => "puppet:///modules/${module_name}/messages.nagios",
     }

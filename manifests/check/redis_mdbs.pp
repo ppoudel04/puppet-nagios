@@ -14,7 +14,7 @@ define nagios::check::redis_mdbs (
   if $pass != undef {
     $arg_pass = "-x ${pass} "
   } else {
-    $arg_pass = ''
+    $arg_pass = undef
   }
 
   $modes.each |$mode, $args_mode| {

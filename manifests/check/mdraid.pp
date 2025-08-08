@@ -1,6 +1,6 @@
 class nagios::check::mdraid (
   $ensure                   = undef,
-  $args                     = '',
+  $args                     = undef,
   $check_title              = $::nagios::client::host_name,
   $servicegroups            = undef,
   $check_period             = $::nagios::client::service_check_period,

@@ -2,7 +2,7 @@ class nagios::check::mongodb (
   $ensure                       = undef,
   $package                      = 'python-pymongo',
   # common args for all modes 'as-is' for the check script
-  $args                         = '',
+  $args                         = undef,
   # common args for all modes as individual parameters
   $user                         = undef,
   $pass                         = undef,
@@ -19,40 +19,40 @@ class nagios::check::mongodb (
   # special, disable auth and modes
   $arbiter                      = false,
   # Modes
-  $args_asserts                 = '',
-  $args_chunks_balance          = '',
-  $args_collection_indexes      = '',
-  $args_collections             = '',
-  $args_collection_size         = '',
-  $args_collection_state        = '',
-  $args_collection_storageSize  = '',
-  $args_connect                 = '',
-  $args_connections             = '',
-  $args_connect_primary         = '',
-  $args_current_lock            = '',
-  $args_database_indexes        = '',
-  $args_databases               = '',
-  $args_database_size           = '',
-  $args_flushing                = '',
-  $args_index_miss_ratio        = '',
-  $args_journal_commits_in_wl   = '',
-  $args_journaled               = '',
-  $args_last_flush_time         = '',
-  $args_lock                    = '',
-  $args_memory                  = '',
-  $args_memory_mapped           = '',
-  $args_opcounters              = '',
-  $args_oplog                   = '',
-  $args_page_faults             = '',
-  $args_queries_per_second      = '',
-  $args_queues                  = '',
-  $args_replica_primary         = '',
-  $args_replication_lag         = '',
-  $args_replication_lag_percent = '',
-  $args_replset_quorum          = '',
-  $args_replset_state           = '',
-  $args_row_count               = '',
-  $args_write_data_files        = '',
+  $args_asserts                 = undef,
+  $args_chunks_balance          = undef,
+  $args_collection_indexes      = undef,
+  $args_collections             = undef,
+  $args_collection_size         = undef,
+  $args_collection_state        = undef,
+  $args_collection_storagesize  = undef,
+  $args_connect                 = undef,
+  $args_connections             = undef,
+  $args_connect_primary         = undef,
+  $args_current_lock            = undef,
+  $args_database_indexes        = undef,
+  $args_databases               = undef,
+  $args_database_size           = undef,
+  $args_flushing                = undef,
+  $args_index_miss_ratio        = undef,
+  $args_journal_commits_in_wl   = undef,
+  $args_journaled               = undef,
+  $args_last_flush_time         = undef,
+  $args_lock                    = undef,
+  $args_memory                  = undef,
+  $args_memory_mapped           = undef,
+  $args_opcounters              = undef,
+  $args_oplog                   = undef,
+  $args_page_faults             = undef,
+  $args_queries_per_second      = undef,
+  $args_queues                  = undef,
+  $args_replica_primary         = undef,
+  $args_replication_lag         = undef,
+  $args_replication_lag_percent = undef,
+  $args_replset_quorum          = undef,
+  $args_replset_state           = undef,
+  $args_row_count               = undef,
+  $args_write_data_files        = undef,
   # service
   $check_title              = $::nagios::client::host_name,
   $servicegroups            = 'mongodb',
@@ -73,22 +73,22 @@ class nagios::check::mongodb (
   if $args !~ /-u/ and $user != undef and $arbiter != true {
     $arg_u = "-u ${user} "
   } else {
-    $arg_u = ''
+    $arg_u = undef
   }
   if $args !~ /-p/ and $pass != undef and $arbiter != true {
     $arg_p = "-p ${pass} "
   } else {
-    $arg_p = ''
+    $arg_p = undef
   }
   if $args !~ /-d/ and $database != undef {
     $arg_d = "-d ${database} "
   } else {
-    $arg_d = ''
+    $arg_d = undef
   }
   if $args !~ /-c/ and $collection != undef {
     $arg_c = "-c ${collection} "
   } else {
-    $arg_c = ''
+    $arg_c = undef
   }
   $globalargs = strip("-D ${arg_u}${arg_p}${arg_d}${arg_c}${args}")
 
@@ -177,12 +177,12 @@ class nagios::check::mongodb (
 
   # Modes-specific definition
   $modes = $modes_base
-         + $modes_enabled_v2
-         + $modes_enabled_mmapv1
-         + $modes_enabled_replication
-         + $modes_enabled_sharding
-         + $modes_enabled_database
-         + $modes_enabled_collection
+  + $modes_enabled_v2
+  + $modes_enabled_mmapv1
+  + $modes_enabled_replication
+  + $modes_enabled_sharding
+  + $modes_enabled_database
+  + $modes_enabled_collection
 
   # An arbiter has no data, so remove all checks which are *never* relevant
   $modes_arbiter = [

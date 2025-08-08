@@ -1,7 +1,7 @@
 class nagios::check::disk (
   $ensure                   = undef,
   $plugin_command           = '/usr/lib64/nagios/plugins/check_disk',
-  $args                     = '',
+  $args                     = undef,
   # -l : Do not check network mounts, local (and checked) elsewhere
   # binfmt_misc : Denied by default, not useful to monitor
   # rpc_pipefs  : Denied by default, not useful to monitor
@@ -15,15 +15,15 @@ class nagios::check::disk (
   $max_check_attempts       = $::nagios::client::service_max_check_attempts,
   $notification_period      = $::nagios::client::service_notification_period,
   $use                      = $::nagios::client::service_use,
-) inherits ::nagios::client {
+) inherits nagios::client {
 
   if $ensure != 'absent' {
     Package <| tag == 'nagios-plugins-disk' |>
   }
 
   # Include defaults if no overrides in $args
-  if $args !~ /-w/ { $arg_w = '-w 5% ' } else { $arg_w = '' }
-  if $args !~ /-c/ { $arg_c = '-c 2% ' } else { $arg_c = '' }
+  if $args !~ /-w/ { $arg_w = '-w 5% ' } else { $arg_w = undef }
+  if $args !~ /-c/ { $arg_c = '-c 2% ' } else { $arg_c = undef }
   $fullargs = strip("${original_args} ${arg_w}${arg_c}${args}")
 
   nagios::client::nrpe_file { 'check_disk':
